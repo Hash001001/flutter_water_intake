@@ -70,8 +70,8 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: waterDialog,
-        child: Icon(Icons.add),
         backgroundColor: Colors.amberAccent,
+        child: Icon(Icons.add),
       ),
     );
   }
