@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_water_intake/pages/home.dart';
+import 'package:flutter_water_intake/provider/water_model_provider.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(create: (BuildContext context) => WaterModel(),
+  child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {

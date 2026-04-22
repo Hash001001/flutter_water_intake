@@ -1,7 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_water_intake/models/water_model.dart';
+import 'package:flutter_water_intake/provider/water_model_provider.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,29 +13,24 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final amountController = TextEditingController();
 
-  void savewater(String amount) async {
-    final url = Uri.https(
-      "water-intaker-1b921-default-rtdb.asia-southeast1.firebasedatabase.app",
-      "water.json",
+  @override
+  void initState() {
+    Provider.of<WaterModel>(context, listen: false).getWaterList();
+    super.initState();
+  }
+
+  void saveWater() {
+    Provider.of<WaterModel>(context, listen: false).savewater(
+      Water(
+        amount: double.parse(amountController.text.toString()),
+        unit: "ml",
+        dateTime: DateTime.now(),
+      ),
     );
 
-    var response = await http.post(
-      url,
-      headers: {"Content-Type": "Application/Json"},
-      body: json.encode({
-        "amount": double.parse(amount),
-        "unit" : "ml",
-        "dateTime": DateTime.now().toString()
-      }),
-    );
-
-    if(response.statusCode == 200){
-      print("api success");
-
-    }else{
-      print("error calling api");
+    if (!context.mounted) {
+      return;
     }
-
   }
 
   void waterDialog() {
@@ -62,7 +57,9 @@ class _HomePageState extends State<HomePage> {
           ),
           actions: [
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
               child: Text(
                 "Cancel",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -70,7 +67,9 @@ class _HomePageState extends State<HomePage> {
             ),
             TextButton(
               onPressed: () {
-                savewater(amountController.text.trim().toString());
+                saveWater();
+                amountController.clear();
+                Navigator.of(context).pop();
               },
               child: Text(
                 "Save",
@@ -85,18 +84,50 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        elevation: 4,
-        title: Text("Water"),
-        actions: [Icon(Icons.map)],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: waterDialog,
-        backgroundColor: Colors.amberAccent,
-        child: Icon(Icons.add),
-      ),
+    var provider = Provider.of<WaterModel>(context, listen: false);
+    return Consumer(
+      builder: (BuildContext context, WaterModel value, Widget? child) =>
+          Scaffold(
+            appBar: AppBar(
+              centerTitle: true,
+              elevation: 4,
+              title: Text("Water"),
+              actions: [Icon(Icons.map)],
+            ),
+            body: ListView.builder(
+              itemCount: value.waterList.length,
+              itemBuilder: (context, index) {
+                final item = value.waterList[index];
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Card(
+                    child: ListTile(
+                      title: Row(
+                        children: [
+                          Icon(Icons.water_drop, color: Colors.lightBlueAccent),
+                          Text(
+                            item.amount.toStringAsFixed(2),
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                        ],
+                      ),
+                      subtitle: Text(
+                        "${item.dateTime.day}/${item.dateTime.month}",
+                      ),
+                      trailing: IconButton(onPressed: (){
+                        Provider.of<WaterModel>(context, listen: false).delete(item);
+                      }, icon: Icon(Icons.delete)),
+                    ),
+                  ),
+                );
+              },
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: waterDialog,
+              backgroundColor: Colors.amberAccent,
+              child: Icon(Icons.add),
+            ),
+          ),
     );
   }
 }
