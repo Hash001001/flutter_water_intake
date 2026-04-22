@@ -12,11 +12,28 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final amountController = TextEditingController();
+  bool _isLoading = true;
 
   @override
   void initState() {
-    Provider.of<WaterModel>(context, listen: false).getWaterList();
+    _loadData();
     super.initState();
+  }
+
+  void _loadData() async {
+    await Provider.of<WaterModel>(context, listen: false).getWaterList().then((
+      water,
+    ) {
+      if (water.isNotEmpty) {
+        setState(() {
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _isLoading = true;
+        });
+      }
+    });
   }
 
   void saveWater() {
@@ -94,7 +111,7 @@ class _HomePageState extends State<HomePage> {
               title: Text("Water"),
               actions: [Icon(Icons.map)],
             ),
-            body: ListView.builder(
+            body: !_isLoading ? ListView.builder(
               itemCount: value.waterList.length,
               itemBuilder: (context, index) {
                 final item = value.waterList[index];
@@ -106,7 +123,7 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           Icon(Icons.water_drop, color: Colors.lightBlueAccent),
                           Text(
-                            item.amount.toStringAsFixed(2),
+                            "${item.amount.toStringAsFixed(2)} ml",
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
                         ],
@@ -114,14 +131,20 @@ class _HomePageState extends State<HomePage> {
                       subtitle: Text(
                         "${item.dateTime.day}/${item.dateTime.month}",
                       ),
-                      trailing: IconButton(onPressed: (){
-                        Provider.of<WaterModel>(context, listen: false).delete(item);
-                      }, icon: Icon(Icons.delete)),
+                      trailing: IconButton(
+                        onPressed: () {
+                          Provider.of<WaterModel>(
+                            context,
+                            listen: false,
+                          ).delete(item);
+                        },
+                        icon: Icon(Icons.delete),
+                      ),
                     ),
                   ),
                 );
               },
-            ),
+            ) : Center(child: CircularProgressIndicator(),),
             floatingActionButton: FloatingActionButton(
               onPressed: waterDialog,
               backgroundColor: Colors.amberAccent,
