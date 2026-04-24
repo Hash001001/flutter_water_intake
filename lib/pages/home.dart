@@ -111,40 +111,52 @@ class _HomePageState extends State<HomePage> {
               title: Text("Water"),
               actions: [Icon(Icons.map)],
             ),
-            body: !_isLoading ? ListView.builder(
-              itemCount: value.waterList.length,
-              itemBuilder: (context, index) {
-                final item = value.waterList[index];
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Card(
-                    child: ListTile(
-                      title: Row(
-                        children: [
-                          Icon(Icons.water_drop, color: Colors.lightBlueAccent),
-                          Text(
-                            "${item.amount.toStringAsFixed(2)} ml",
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
-                        ],
-                      ),
-                      subtitle: Text(
-                        "${item.dateTime.day}/${item.dateTime.month}",
-                      ),
-                      trailing: IconButton(
-                        onPressed: () {
-                          Provider.of<WaterModel>(
-                            context,
-                            listen: false,
-                          ).delete(item);
+            body: ListView(
+              children: [
+                !_isLoading
+                    ? ListView.builder(
+                      physics: ScrollPhysics(),
+                        itemCount: value.waterList.length,
+                        itemBuilder: (context, index) {
+                          final item = value.waterList[index];
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Card(
+                              child: ListTile(
+                                title: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.water_drop,
+                                      color: Colors.lightBlueAccent,
+                                    ),
+                                    Text(
+                                      "${item.amount.toStringAsFixed(2)} ml",
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.titleMedium,
+                                    ),
+                                  ],
+                                ),
+                                subtitle: Text(
+                                  "${item.dateTime.day}/${item.dateTime.month}",
+                                ),
+                                trailing: IconButton(
+                                  onPressed: () {
+                                    Provider.of<WaterModel>(
+                                      context,
+                                      listen: false,
+                                    ).delete(item);
+                                  },
+                                  icon: Icon(Icons.delete),
+                                ),
+                              ),
+                            ),
+                          );
                         },
-                        icon: Icon(Icons.delete),
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ) : Center(child: CircularProgressIndicator(),),
+                      )
+                    : Center(child: CircularProgressIndicator()),
+              ],
+            ),
             floatingActionButton: FloatingActionButton(
               onPressed: waterDialog,
               backgroundColor: Colors.amberAccent,

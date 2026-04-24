@@ -25,12 +25,12 @@ class BarData {
   void initBarData(){
     bardata = [
       IndividualBar(x: 0, y: sunWaterAmount),
-      IndividualBar(x: 0, y: monWaterAmount),
-      IndividualBar(x: 0, y: tueWaterAmount),
-      IndividualBar(x: 0, y: wedWaterAmount),
-      IndividualBar(x: 0, y: thuWaterAmount),
-      IndividualBar(x: 0, y: friWaterAmount),
-      IndividualBar(x: 0, y: satWaterAmount),
+      IndividualBar(x: 1, y: monWaterAmount),
+      IndividualBar(x: 2, y: tueWaterAmount),
+      IndividualBar(x: 3, y: wedWaterAmount),
+      IndividualBar(x: 4, y: thuWaterAmount),
+      IndividualBar(x: 5, y: friWaterAmount),
+      IndividualBar(x: 6, y: satWaterAmount),
     ];
   }
 
