@@ -78,4 +78,43 @@ class WaterModel extends ChangeNotifier {
     waterList.removeWhere((e) => e.id == item.id);
     notifyListeners();
   }
+
+  String weekday(DateTime dateTime) {
+    switch (dateTime.weekday) {
+      case 1:
+        return "Mon";
+
+      case 2:
+        return "Tue";
+
+      case 3:
+        return "Wed";
+
+      case 4:
+        return "Thu";
+      case 5:
+        return "Fri";
+
+      case 6:
+        return "Sat";
+
+      case 7:
+        return "Sun";
+      default:
+        return "";
+    }
+  }
+
+  DateTime getStartOfTheWeekDay() {
+    DateTime? startOfTheWeek;
+
+    DateTime currentDateTime = DateTime.now();
+
+    for (int i = 0; i < 7; i++) {
+      if(weekday(currentDateTime.subtract(Duration(days: i))) == "Sun"){
+          startOfTheWeek = currentDateTime.subtract(Duration(days: i));
+      }
+    }
+    return startOfTheWeek!;
+  }
 }

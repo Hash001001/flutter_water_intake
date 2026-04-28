@@ -35,17 +35,20 @@ class BarGraph extends StatelessWidget {
       friWaterAmount: friWaterAmount,
       satWaterAmount: satWaterAmount,
     );
-    return BarChart(BarChartData(
-      maxY: maxY,
-      minY: 0,
-      barGroups: barData.bardata.map((data){
-        return BarChartGroupData(x: data.x, 
-        barRods: [
-          BarChartRodData(
-            toY: data.y
-          )
-        ]);
-      }).toList()
-    ));
+
+    barData.initBarData();
+
+    return BarChart(
+      BarChartData(
+        maxY: maxY,
+        minY: 0,
+        barGroups: barData.bardata.map((data) {
+          return BarChartGroupData(
+            x: data.x,
+            barRods: [BarChartRodData(toY: data.y)],
+          );
+        }).toList(),
+      ),
+    );
   }
 }

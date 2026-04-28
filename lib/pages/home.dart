@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_water_intake/bars/water_summary.dart';
 import 'package:flutter_water_intake/models/water_model.dart';
 import 'package:flutter_water_intake/provider/water_model_provider.dart';
 import 'package:provider/provider.dart';
@@ -101,7 +102,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var provider = Provider.of<WaterModel>(context, listen: false);
     return Consumer(
       builder: (BuildContext context, WaterModel value, Widget? child) =>
           Scaffold(
@@ -113,9 +113,11 @@ class _HomePageState extends State<HomePage> {
             ),
             body: ListView(
               children: [
+                WaterSummary(startofWeek: value.getStartOfTheWeekDay()),
                 !_isLoading
                     ? ListView.builder(
-                      physics: ScrollPhysics(),
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
                         itemCount: value.waterList.length,
                         itemBuilder: (context, index) {
                           final item = value.waterList[index];
@@ -125,7 +127,7 @@ class _HomePageState extends State<HomePage> {
                               child: ListTile(
                                 title: Row(
                                   children: [
-                                    Icon(
+                                    const Icon(
                                       Icons.water_drop,
                                       color: Colors.lightBlueAccent,
                                     ),
@@ -147,14 +149,14 @@ class _HomePageState extends State<HomePage> {
                                       listen: false,
                                     ).delete(item);
                                   },
-                                  icon: Icon(Icons.delete),
+                                  icon: const Icon(Icons.delete),
                                 ),
                               ),
                             ),
                           );
                         },
                       )
-                    : Center(child: CircularProgressIndicator()),
+                    : const Center(child: CircularProgressIndicator()),
               ],
             ),
             floatingActionButton: FloatingActionButton(
