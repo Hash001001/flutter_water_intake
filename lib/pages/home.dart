@@ -118,9 +118,9 @@ class _HomePageState extends State<HomePage> {
                     ? ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        itemCount: value.waterList.length,
+                        itemCount: value.waterDataList.length,
                         itemBuilder: (context, index) {
-                          final item = value.waterList[index];
+                          final item = value.waterDataList[index];
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Card(

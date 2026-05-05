@@ -3,9 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_water_intake/models/water_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/retry.dart';
 
 class WaterModel extends ChangeNotifier {
-  List<Water> waterList = [];
+  List<Water> waterDataList = [];
 
   void savewater(Water water) async {
     final url = Uri.https(
@@ -25,7 +26,7 @@ class WaterModel extends ChangeNotifier {
 
     if (response.statusCode == 200) {
       final responseStr = json.decode(response.body) as Map<String, dynamic>;
-      waterList.add(
+      waterDataList.add(
         Water(
           id: responseStr["name"],
           amount: water.amount,
@@ -49,12 +50,12 @@ class WaterModel extends ChangeNotifier {
     final response = await http.get(url);
 
     if (response.statusCode == 200 && response.body != 'null') {
-      waterList.clear();
+      waterDataList.clear();
       //we are good to  go
       var responseData = json.decode(response.body) as Map<String, dynamic>;
 
       for (var data in responseData.entries) {
-        waterList.add(
+        waterDataList.add(
           Water(
             id: data.key,
             amount: data.value["amount"],
@@ -65,7 +66,7 @@ class WaterModel extends ChangeNotifier {
       }
     }
     notifyListeners();
-    return waterList;
+    return waterDataList;
   }
 
   void delete(Water item) {
@@ -75,7 +76,7 @@ class WaterModel extends ChangeNotifier {
     );
 
     http.delete(url);
-    waterList.removeWhere((e) => e.id == item.id);
+    waterDataList.removeWhere((e) => e.id == item.id);
     notifyListeners();
   }
 
@@ -111,10 +112,19 @@ class WaterModel extends ChangeNotifier {
     DateTime currentDateTime = DateTime.now();
 
     for (int i = 0; i < 7; i++) {
-      if(weekday(currentDateTime.subtract(Duration(days: i))) == "Sun"){
-          startOfTheWeek = currentDateTime.subtract(Duration(days: i));
+      if (weekday(currentDateTime.subtract(Duration(days: i))) == "Sun") {
+        startOfTheWeek = currentDateTime.subtract(Duration(days: i));
       }
     }
     return startOfTheWeek!;
+  }
+
+  //calculate weekly water intake
+  String calculateWeeklyWaterIntake(WaterModel value) {
+    double weeklyWaterIntake = 0;
+    for (var water in value.waterDataList) {
+      weeklyWaterIntake += double.parse(water.amount.toString());
+    }
+    return weeklyWaterIntake.toStringAsFixed(2);
   }
 }
