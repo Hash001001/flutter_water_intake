@@ -136,7 +136,7 @@ class WaterModel extends ChangeNotifier {
 
     for(var water in waterDataList){
       var date = getReadAbleDate(water.dateTime);
-      double amount = double.parse(water.toString());
+      double amount = double.parse(water.amount.toString());
 
       if(dailyWaterSummary.containsKey(date)){
         var currentAmount = dailyWaterSummary[date]!;
