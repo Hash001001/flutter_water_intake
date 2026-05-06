@@ -131,24 +131,20 @@ class WaterModel extends ChangeNotifier {
 
   //calculate daily water intake
   Map<String, double> calculateDailyWaterSummary() {
-    
     Map<String, double> dailyWaterSummary = {};
 
-    for(var water in waterDataList){
+    for (var water in waterDataList) {
       var date = getReadAbleDate(water.dateTime);
       double amount = double.parse(water.amount.toString());
 
-      if(dailyWaterSummary.containsKey(date)){
+      if (dailyWaterSummary.containsKey(date)) {
         var currentAmount = dailyWaterSummary[date]!;
         currentAmount += amount;
         dailyWaterSummary[date] = currentAmount;
-      }else{
+      } else {
         dailyWaterSummary.addAll({date: amount});
       }
     }
     return dailyWaterSummary;
   }
-
-
-
 }
