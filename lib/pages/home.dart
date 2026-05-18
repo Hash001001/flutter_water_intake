@@ -109,8 +109,11 @@ class _HomePageState extends State<HomePage> {
             appBar: AppBar(
               centerTitle: true,
               elevation: 4,
-              title: Text("Water"),
+              title: Text("${value.calculateWeeklyWaterIntake(value)} ml"),
               actions: [Icon(Icons.map)],
+            ),
+            drawer: Drawer(
+              child: Text("My Drawer"),
             ),
             body: ListView(
               children: [
