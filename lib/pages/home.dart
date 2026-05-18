@@ -1,6 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_water_intake/bars/water_summary.dart';
 import 'package:flutter_water_intake/models/water_model.dart';
+import 'package:flutter_water_intake/pages/about.dart';
+import 'package:flutter_water_intake/pages/settings.dart';
 import 'package:flutter_water_intake/provider/water_model_provider.dart';
 import 'package:flutter_water_intake/utils/date_helper.dart';
 import 'package:provider/provider.dart';
@@ -112,17 +115,48 @@ class _HomePageState extends State<HomePage> {
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Weekly: ", style: Theme.of(context).textTheme.titleMedium,),
-                  Text("${value.calculateWeeklyWaterIntake(value)} ml", 
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold
-                  ), ),
+                  Text(
+                    "Weekly: ",
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  Text(
+                    "${value.calculateWeeklyWaterIntake(value)} ml",
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ],
               ),
               actions: [Icon(Icons.map)],
             ),
             drawer: Drawer(
-              child: Text("My Drawer"),
+              child: ListView(
+                children: [
+                  DrawerHeader(
+                    child: Text(
+                      "Water Intaker",
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                   
+                  ),
+                  ListTile(
+                    title: Text("Settings"),
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsScreen()));
+                    },
+                  ),
+
+                  ListTile(
+                    title: Text("About"),
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => AboutScreen()));
+                      
+                    },
+                  )
+                ],
+              ),
             ),
             body: ListView(
               children: [
