@@ -109,7 +109,16 @@ class _HomePageState extends State<HomePage> {
             appBar: AppBar(
               centerTitle: true,
               elevation: 4,
-              title: Text("${value.calculateWeeklyWaterIntake(value)} ml"),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Weekly: ", style: Theme.of(context).textTheme.titleMedium,),
+                  Text("${value.calculateWeeklyWaterIntake(value)} ml", 
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold
+                  ), ),
+                ],
+              ),
               actions: [Icon(Icons.map)],
             ),
             drawer: Drawer(
